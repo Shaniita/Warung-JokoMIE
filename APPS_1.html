@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Warung Mie Ayam</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .menu-item {
+      background-color: #FFEB3B;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .menu-item:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+    .menu-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 16px;
+    }
+    .menu-item input {
+      width: 50px;
+      padding: 5px;
+      text-align: center;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body class="bg-yellow-50 text-gray-800 font-sans p-4">
+  <!-- Halaman Awal -->
+  <div id="startPage" class="max-w-xl mx-auto bg-white rounded-2xl shadow-lg p-6 space-y-6 text-center">
+    <h1 class="text-3xl font-bold text-red-600">🍜 Selamat Datang!</h1>
+    <p class="text-xl">Mau makan di mana?</p>
+    <div class="flex flex-col gap-4 mt-4">
+      <button onclick="pilihTempat('Dibungkus')" class="bg-orange-400 hover:bg-orange-500 text-white text-xl py-3 rounded-xl">Dibungkus</button>
+      <button onclick="pilihTempat('Makan di Tempat')" class="bg-green-500 hover:bg-green-600 text-white text-xl py-3 rounded-xl">Makan di Tempat</button>
+    </div>
+  </div>
+
+  <!-- Halaman Menu -->
+  <div id="menuPage" class="max-w-xl mx-auto bg-white rounded-2xl shadow-lg p-6 space-y-6 hidden">
+    <h1 class="text-3xl font-bold text-center text-red-600">🍜 Warung Mie Ayam & Bakso</h1>
+
+    <form id="orderForm" class="space-y-4 text-lg">
+      <div class="menu-container">
+        <div class="menu-item">
+          Mie Ayam Biasa<br>Rp10.000
+          <input type="number" name="Mie Ayam Biasa" value="0" min="0">
+        </div>
+        <div class="menu-item">
+          Mie Ayam Pentol<br>Rp12.000
+          <input type="number" name="Mie Ayam Pentol" value="0" min="0">
+        </div>
+        <div class="menu-item">
+          Mie Ayam Ceker<br>Rp13.000
+          <input type="number" name="Mie Ayam Ceker" value="0" min="0">
+        </div>
+        <div class="menu-item">
+          Bakso<br>Rp13.000
+          <input type="number" name="Bakso" value="0" min="0">
+        </div>
+        <div class="menu-item">
+          Bakso Special<br>Rp15.000
+          <input type="number" name="Bakso Special" value="0" min="0">
+        </div>
+        <div class="menu-item">
+          Es Teh<br>Rp2.000
+          <input type="number" name="Es Teh" value="0" min="0">
+        </div>
+        <div class="menu-item">
+          Es Jeruk<br>Rp3.000
+          <input type="number" name="Es Jeruk" value="0" min="0">
+        </div>
+      </div>
+
+      <div>
+        <label class="block mt-4">Catatan / Permintaan Khusus
+          <textarea id="notes" rows="3" class="w-full border rounded p-2 mt-1" placeholder="Misal: tanpa sambal, level pedas sedang, dll."></textarea>
+        </label>
+      </div>
+
+      <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-xl text-2xl">
+        Pesan Sekarang
+      </button>
+    </form>
+  </div>
+
+  <script>
+    let tempatMakan = ""; // Simpan pilihan: Dibungkus atau Makan di Tempat
+
+    function pilihTempat(pilihan) {
+      tempatMakan = pilihan;
+      document.getElementById("startPage").classList.add("hidden");
+      document.getElementById("menuPage").classList.remove("hidden");
+    }
+
+    const harga = {
+      "Mie Ayam Biasa": 10000,
+      "Mie Ayam Pentol": 12000,
+      "Mie Ayam Ceker": 13000,
+      "Bakso": 13000,
+      "Bakso Special": 15000,
+      "Es Teh": 2000,
+      "Es Jeruk": 3000
+    };
+
+    const form = document.getElementById('orderForm');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      let pesan = `Halo! Saya ingin pesan:%0A(${tempatMakan})%0A`;
+      let total = 0;
+
+      for (let item in harga) {
+        const jumlah = parseInt(form.elements[item].value);
+        if (jumlah > 0) {
+          pesan += `- ${item} x${jumlah}%0A`;
+          total += harga[item] * jumlah;
+        }
+      }
+
+      const notes = document.getElementById("notes").value;
+      if (notes.trim()) {
+        pesan += `%0A*Catatan:* ${notes}`;
+      }
+
+      pesan += `%0A%0ATotal: Rp${total.toLocaleString()}`;
+      const nomor = "+6287816758074"; 
+      const url = `https://wa.me/${nomor}?text=${pesan}`;
+      window.open(url, "_blank");
+    });
+  </script>
+</body>
+</html>
